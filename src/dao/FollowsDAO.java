@@ -2,59 +2,111 @@ package dao;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+import controller.HibernateUtil;
 import model.Follows;
+import model.Publication;
 
 public class FollowsDAO 
 {
-	public List<Follows> getAll(EntityManager entityManager)
+	public List<Follows> getAll()
 	{
-		String sql="from Follows follows";
-		Query query=entityManager.createQuery(sql);
-		return query.getResultList();
+		Session session = HibernateUtil.currentSession();
+		try {
+			String sql="from Follows follows";
+			Query query = session.createQuery(sql);
+			return query.getResultList();
+		} finally {
+			HibernateUtil.closeSession();
+		}
 	}
 	
-	public Follows create(EntityManager entityManager,Follows follow)
+	public Follows create(Follows follow)
 	{
-		entityManager.getTransaction().begin();
-		entityManager.persist(follow);
-		entityManager.getTransaction().commit();
-		return follow;
+		try {
+			if(getByFid(follow.getfId())==null)
+			{
+				Session session = HibernateUtil.currentSession();
+				Transaction transaction = (Transaction) session.beginTransaction();
+				session.save(follow);
+				transaction.commit();
+			}
+			return follow;
+		} finally {
+			// TODO: handle finally clause
+			HibernateUtil.closeSession();
+		}
 	}
 	
-	public void delete(EntityManager entityManager,Follows follow)
+	public void delete(Follows follow)
 	{
-		entityManager.getTransaction().begin();
-		entityManager.remove(follow);
-		entityManager.getTransaction().commit();
+		Session session = HibernateUtil.currentSession();
+		try {
+			Transaction transaction = (Transaction) session.beginTransaction();
+			session.delete(follow);
+			transaction.commit();
+			HibernateUtil.closeSession();
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("Error: " + e.getMessage());
+		} finally {
+			// TODO: handle finally clause
+			HibernateUtil.closeSession();
+		}
 	}
 	
 	//根据用户id 查找该用户的拥护者
-	public List<Follows> getFollowersOfUser(EntityManager entityManager,int uId)
+	public List<Follows> getFollowersOfUser(int uId)
 	{
-		String sql="select follows from Follows follows where follows.follow.uId=:uId";
-		Query query=entityManager.createQuery(sql);
-		query.setParameter("uId", uId);
-		return query.getResultList();
+		Session session = HibernateUtil.currentSession();
+		try {
+			String sql="select follows from Follows follows where follows.follow.uId=:uId";
+			Query query = session.createQuery(sql);
+			query.setParameter("uId", uId);
+			return query.getResultList();
+		} finally {
+			HibernateUtil.closeSession();
+		}
 	}
 	
 	//根据用户id 查找该用户follow的人
-	public List<Follows> getFollowsOfUser(EntityManager entityManager,int uId)
+	public List<Follows> getFollowsOfUser(int uId)
 	{
-		String sql="select follows from Follows follows where follows.follower.uId=:uId";
-		Query query=entityManager.createQuery(sql);
-		query.setParameter("uId", uId);
-		return query.getResultList();
+		Session session = HibernateUtil.currentSession();
+		try {
+			String sql="select follows from Follows follows where follows.follower.uId=:uId";
+			Query query = session.createQuery(sql);
+			query.setParameter("uId", uId);
+			return query.getResultList();
+		} finally {
+			HibernateUtil.closeSession();
+		}
 	}
 	
-	public List<Follows> getFollow(EntityManager entityManager,int uFollowId,int uFollowerId)
+	public List<Follows> getFollow(int uFollowId,int uFollowerId)
 	{
-		String sql="select follows from Follows follows where follows.follow.uId=:uFollowId and follows.follower.uId=:uFollowerId";
-		Query query=entityManager.createQuery(sql);
-		query.setParameter("uFollowId", uFollowId);
-		query.setParameter("uFollowerId", uFollowerId);
-		return query.getResultList();
+		Session session = HibernateUtil.currentSession();
+		try {
+			String sql="select follows from Follows follows where follows.follow.uId=:uFollowId and follows.follower.uId=:uFollowerId";
+			Query query = session.createQuery(sql);
+			query.setParameter("uFollowId", uFollowId);
+			query.setParameter("uFollowerId", uFollowerId);
+			return query.getResultList();
+		} finally {
+			HibernateUtil.closeSession();
+		}
+	}
+	
+	public Publication getByFid(int fId) {
+		Session session = HibernateUtil.currentSession();
+		try {
+			return session.find(Publication.class, fId);
+		} finally {
+			HibernateUtil.closeSession();
+		}
 	}
 }
