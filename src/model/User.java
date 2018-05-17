@@ -11,23 +11,22 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 @Entity
-public class User 
-{
+public class User {
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int uId;
-	
+
 	private String userName;
 	private String password;
 	private boolean privacy;
-	
-	@OneToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY,mappedBy="follow")
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "follower")
 	private List<Follows> follows;
-	
-	@OneToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY,mappedBy="follower")
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "follow")
 	private List<Follows> followers;
 
-	@OneToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY,mappedBy="user")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
 	private List<Publication> publications;
 
 	public int getuId() {
@@ -62,7 +61,6 @@ public class User
 		this.privacy = privacy;
 	}
 
-
 	public List<Publication> getPublications() {
 		return publications;
 	}
@@ -85,5 +83,14 @@ public class User
 
 	public void setFollowers(List<Follows> followers) {
 		this.followers = followers;
+	}
+
+	public User() {
+	}
+
+	public User(String userName, String password, boolean privacy) {
+		this.userName = userName;
+		this.password = password;
+		this.privacy = privacy;
 	}
 }
