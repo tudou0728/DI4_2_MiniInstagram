@@ -12,18 +12,13 @@
 		      <param-name>jersey.config.server.provider.packages</param-name>
 		      <param-value>webService</param-value>
 		    </init-param>
+		    <!-- <init-param>    
+		      <param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>       
+		      <param-value>controller.AuthenticationFilters</param-value>    
+		    </init-param>  -->  
 		  </servlet>
 		  <servlet-mapping>
 		    <servlet-name>MiniInstagramJerseySerlvet</servlet-name>
 		    <url-pattern>/rest/*</url-pattern>
 		  </servlet-mapping>
-		  
-		  <filter>
-		    <filter-name>AuthenticationFilter</filter-name>
-		    <filter-class>controller.AuthenticationFilter</filter-class>
-		  </filter>
-		  <filter-mapping>
-		    <filter-name>AuthenticationFilter</filter-name>
-		    <url-pattern>/rest/service/*</url-pattern>
-		  </filter-mapping>
 </web-app> 

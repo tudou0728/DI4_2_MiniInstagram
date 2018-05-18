@@ -15,7 +15,7 @@
         <!-- 是否根据需要自动建表 -->  
         <property name="hbm2ddl.auto">update</property>  
         <!-- 是否显示sql语句 -->  
-        <property name="show_sql">false</property>  
+        <property name="show_sql">true</property>  
         <!-- 罗列所有持久化类名 -->     
         <mapping class="model.User"/>
 		<mapping class="model.Publication"/>
