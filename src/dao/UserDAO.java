@@ -37,13 +37,15 @@ public class UserDAO {
 		}
 	}
 
-	public void delete(User user) {
+	public boolean delete(User user) {
 		Session session = HibernateUtil.currentSession();
+		boolean result=false;
 		try {
 			Transaction transaction = (Transaction) session.beginTransaction();
 			session.delete(user);
 			transaction.commit();
 			HibernateUtil.closeSession();
+			result=true;
 		} catch (Exception e) {
 			// TODO: handle exception
 			System.out.println("Error: " + e.getMessage());
@@ -51,6 +53,8 @@ public class UserDAO {
 			// TODO: handle finally clause
 			HibernateUtil.closeSession();
 		}
+		return result;
+		
 	}
 
 	public User getById(int uId) {
@@ -70,6 +74,7 @@ public class UserDAO {
 			query.setParameter("userName", userName);
 			query.setParameter("password", password);
 			List<User> users = query.getResultList();
+			System.out.println(users.size());
 			if (users.size() == 1) {
 				return true;
 			} else {
@@ -82,14 +87,40 @@ public class UserDAO {
 
 	public User update(User user, String userName, String password, boolean privacy) {
 		Session session = HibernateUtil.currentSession();
-		try {
+//		System.out.println("lalalala: "+user.getPassword());
+		try {	
 			Transaction transaction = (Transaction) session.beginTransaction();
-			user.setUserName(userName);
-			user.setPassword(password);
+			if(userName!=null && !userName.equals(""))
+			{
+				user.setUserName(userName);
+			}
+			if(password!=null && !password.equals(""))
+			{
+				user.setPassword(password);
+			}
 			user.setPrivacy(privacy);
 			session.update(user);
 			transaction.commit();
 			return user;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+	}
+	
+	public User get(String userName, String password) {
+		Session session = HibernateUtil.currentSession();
+		try {
+			String sql = "from User user where user.userName=:userName and user.password=:password";
+			Query query = session.createQuery(sql);
+			query.setParameter("userName", userName);
+			query.setParameter("password", password);
+			List<User> users = query.getResultList();
+			System.out.println(users.size());
+			if (users.size() >0) {
+				return users.get(0);
+			} else {
+				return null;
+			}
 		} finally {
 			HibernateUtil.closeSession();
 		}
