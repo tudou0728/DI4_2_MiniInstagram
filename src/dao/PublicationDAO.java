@@ -10,6 +10,7 @@ import org.hibernate.Transaction;
 import controller.HibernateUtil;
 import model.Publication;
 import model.Response;
+import model.User;
 
 public class PublicationDAO {
 
@@ -40,11 +41,13 @@ public class PublicationDAO {
 		}
 	}
 
-	public List<Publication> getAll() {
+	public List<Publication> getAll(User user) {
 		Session session = HibernateUtil.currentSession();
 		try {
-			String sql = "from Publication publication";
+			int user_uId = user.getuId()	;
+			String sql = "Select publication from Publication publication where user_uId = ? ";
 			Query query = session.createQuery(sql);
+			query.setParameter(1, user_uId);
 			return query.getResultList();
 		} finally {
 			HibernateUtil.closeSession();

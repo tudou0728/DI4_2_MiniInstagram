@@ -33,20 +33,22 @@ public class responseWS {
 	@Inject
 	AuthenticationService authenticationService;
 
-	@GET
-	public List<Response> getAllRes() {
-		return responseService.getAllRes();
-	}
+//	@GET
+//	public List<Response> getAllRes() {
+//		return responseService.getAllRes();
+//	}
 
 	@GET
-	public List<Response> getAllResByPid(@QueryParam("pId") int pId) {
-		return responseService.getAllResByPid(pId);
+	public List<Response> getAllResByPid(@HeaderParam("Authorization") String authCredentials,@QueryParam("pId") int pId) {
+		User user = authenticationService.get(authCredentials);
+		return responseService.getAllResByPid(pId,user);
 	}
 
 	@DELETE
-	public void deleteRes(@QueryParam("rId") int rId) {
+	public void deleteRes(@HeaderParam("Authorization") String authCredentials,@QueryParam("rId") int rId) {
+		User user = authenticationService.get(authCredentials);
 		Response response = responseService.getById(rId);
-		responseService.deleteRes(response);
+		responseService.deleteRes(response,user);
 	}
 
 	@POST
@@ -55,17 +57,17 @@ public class responseWS {
 		Publication publication = publicationService.getById(pId);
 		User user = authenticationService.get(authCredentials);
 		Response response = new Response(comment, date, user, publication);
-		responseService.createRes(response);
+		responseService.createRes(response,user);
 		return response;
 	}
 
-	@PUT
-	public void updateRes(@HeaderParam("Authorization") String authCredentials,@QueryParam("pId") int pId,@QueryParam("rId") int rId,@QueryParam("comment") String comment,@QueryParam("date") Date date) {
-		Publication publication = publicationService.getById(pId);
-		User user = authenticationService.get(authCredentials);
-		Response response = responseService.getById(rId);
-		responseService.updateRes(response, comment, date, user, publication);
-		
-	}
+//	@PUT
+//	public void updateRes(@HeaderParam("Authorization") String authCredentials,@QueryParam("pId") int pId,@QueryParam("rId") int rId,@QueryParam("comment") String comment,@QueryParam("date") Date date) {
+//		Publication publication = publicationService.getById(pId);
+//		User user = authenticationService.get(authCredentials);
+//		Response response = responseService.getById(rId);
+//		responseService.updateRes(response, comment, date, user, publication);
+//		
+//	}
 
 }
