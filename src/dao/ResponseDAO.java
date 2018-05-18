@@ -16,10 +16,9 @@ import model.User;
 public class ResponseDAO {
 
 	public Response create(Response response) {
-		
+
 		try {
-			if(get(response.getrId())==null)
-			{
+			if (get(response.getrId()) == null) {
 				Session session = HibernateUtil.currentSession();
 				Transaction transaction = (Transaction) session.beginTransaction();
 				session.save(response);
@@ -53,6 +52,18 @@ public class ResponseDAO {
 		}
 	}
 
+	public List<Response> getAllByPid(int pId) {
+		Session session = HibernateUtil.currentSession();
+		try {
+			String sql = "Select response from Response response where publicaiton_pId =?";
+			Query query = session.createQuery(sql);
+			query.setParameter(1, pId);
+			return query.getResultList();
+		} finally {
+			HibernateUtil.closeSession();
+		}
+	}
+
 	public void delete(Response response) {
 		Session session = HibernateUtil.currentSession();
 		try {
@@ -70,7 +81,7 @@ public class ResponseDAO {
 	}
 
 	public Response update(Response response, String comment, Date date, User user, Publication publication) {
-		Session session=HibernateUtil.currentSession();
+		Session session = HibernateUtil.currentSession();
 		try {
 			Transaction transaction = (Transaction) session.beginTransaction();
 			response.setComment(comment);

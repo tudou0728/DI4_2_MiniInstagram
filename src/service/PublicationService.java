@@ -27,4 +27,8 @@ public class PublicationService {
 	public List<Publication> getAllPub() {
 		return publicationDAO.getAll();
 	}
+	
+	public Publication getById(int pId) {
+		return publicationDAO.get(pId);
+	}
 }

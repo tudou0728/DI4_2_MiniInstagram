@@ -13,21 +13,28 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
-public class Publication 
-{
+public class Publication {
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int pId;
-	
+
 	private String imagePath;
 	private String comment;
 	private Date date;
-	
+
 	@ManyToOne
 	private User user;
-	
-	@OneToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY,mappedBy="publication")
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "publication")
 	private List<Response> responses;
+
+	public Publication(String imagePath, String comment, Date date, User user) {
+		super();
+		this.imagePath = imagePath;
+		this.comment = comment;
+		this.date = date;
+		this.user = user;
+	}
 
 	public int getpId() {
 		return pId;
@@ -76,6 +83,5 @@ public class Publication
 	public void setResponses(List<Response> responses) {
 		this.responses = responses;
 	}
-	
-	
+
 }

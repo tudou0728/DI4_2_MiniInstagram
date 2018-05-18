@@ -24,6 +24,14 @@ public class Response
 	@ManyToOne
 	private Publication publication;
 
+	public Response(String comment, Date date, User user, Publication publication) {
+		super();
+		this.comment = comment;
+		this.date = date;
+		this.user = user;
+		this.publication = publication;
+	}
+
 	public int getrId() {
 		return rId;
 	}

@@ -29,4 +29,11 @@ public class ResponseService {
 	public List<Response> getAllRes() {
 		return responseDAO.getAll();
 	}
+	
+	public  List<Response> getAllResByPid(int pId){
+		return responseDAO.getAllByPid(pId);
+	}
+	public Response getById(int rId) {
+		return responseDAO.get(rId);
+	}
 }
